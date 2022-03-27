@@ -6,7 +6,7 @@ function App() {
 
       <div className="output">
         <div className="prev-operand">123,123,123,123,123,123</div>
-        <div className="curr-operand">123,123,123,123,123,123</div>
+        <div className="cur-operand">123,123,123,123,123,123</div>
       </div>
 
       <button className="span-two">AC</button>

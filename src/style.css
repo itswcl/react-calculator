@@ -22,9 +22,11 @@ body {
 }
 
 .calculator-grid > button {
-    cursor: pointer;
-    font-size: 2rem;
+    cursor: pointer; /* mouse cursor */
+    font-size: 2rem; /* size of button */
     border: 1px solid white;
+    /* not in box model */
+    /* outline is outside of border-box */
     outline: none;
     background-color: rgba(255,255,255,.75);
 }
@@ -35,26 +37,27 @@ body {
 }
 
 .span-two {
+    /* span 2 of fr for 2 column */
     grid-column: span 2;
 }
 
 .output {
-    grid-column: 1 / -1;
+    grid-column: 1 / -1; /* 1 to -1 as whole column */
     background-color: rgba(0, 0, 0, 0.75);
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     justify-content: space-around;
     padding: .75rem;
-    word-wrap: break-word;
-    word-break: break-all;
+    word-wrap: break-word; /* word overflow */
+    word-break: break-all; /* word overflow */
 }
 
 .output .prev-operand {
     color: rgba(255,255,255,.75)
 }
 
-.output .curr-operand {
+.output .cur-operand {
     color: white;
     font-size: 2.5rem
 }
