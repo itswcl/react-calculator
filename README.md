@@ -77,3 +77,10 @@
   - then we split it into integer and decimal
   - if no decimal we return the formatted operand
   - if decimal we return formatted operand with the decimal
+### pictures
+![Screen Shot 2022-03-28 at 4 31 41 PM](https://user-images.githubusercontent.com/57115661/160504014-8a098aaa-2959-488e-a8bd-d8b396bbbaf8.jpg)
+
+
+
+
+
