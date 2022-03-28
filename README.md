@@ -27,3 +27,32 @@
 - the action clear
   - reset the state to empty
   - onClick only need to pass in ACTION and no payload
+
+- action of calculate +-*/
+  - no number in the state we prevent the operation to "add" in
+  - if have current number
+    - spread out the state and update
+      - 1. operation
+      - 2. current becomes the previous
+      - 3. clear out the current state
+  - if we have both prev and current
+    - it's the default return for calculate
+    - spread out the state and update
+      - 1. previous number
+        - the previous number will update based on the calculation function - evaluate and it takes current/previous/operation
+        - first we convert the current and previous to number
+        - check either are entire number
+        - then we pass the operation to each cause to match
+            ```js
+            switch (operation) {
+                case "+":
+                    computation = prev + cur
+                    break
+                ...
+                ...
+            }
+            ```
+        - return the computed number and update previous number
+      - 2. update payload operation
+      - 3. current will clear out
+    - if current is empty and we click multiple times of operation will update to latest click

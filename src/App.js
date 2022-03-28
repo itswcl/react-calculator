@@ -51,6 +51,13 @@ const reducer = (state, { type, payload }) => {
         }
       }
 
+      if (state.curOperand == null) {
+        return {
+          ...state,
+          operation: payload.operation
+        }
+      }
+
       // default the case spread the state prevOperand will update based on evaluate function
       // operation is that we click // cur will be null
       return {
