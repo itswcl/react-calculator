@@ -56,3 +56,24 @@
       - 2. update payload operation
       - 3. current will clear out
     - if current is empty and we click multiple times of operation will update to latest click
+    - also add another attribute "overWrite" as true
+      - means it's ready for next calculation
+- update the add digit after the number computed
+  - check the overWrite if true
+  - we will update the current number to the clicked one
+  - overWrite to false;
+
+- delete digits when we click the wrong number
+  - first if the number computed we can clear entire current operand
+  - if no current we can return state
+  - if only 1 current number we can set the current to null
+  - the default if there current numbers
+    - we will slice the last digit we click as slice(0, - 1)
+
+- last we update the format of digits
+  - bring in Intl.NumberFormat("en-us", {maxFractionDigits: 0})
+  - create format function with input operand
+  - if no operand we do nothing
+  - then we split it into integer and decimal
+  - if no decimal we return the formatted operand
+  - if decimal we return formatted operand with the decimal
