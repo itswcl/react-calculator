@@ -23,9 +23,23 @@ const reducer = (state, { type, payload }) => {
   switch (type) {
     // ------------  case adding the digits ------------
     case ACTION.ADD_DIGIT:
+      // on add digit we want to check if the number is ready to over right
+      // overWrite = true
+      if (state.overWrite) {
+        return {
+          // spread out entire state
+          ...state,
+          // update the current number to the digit we clicked
+          curOperand: payload.digit,
+          // turn overWrite to false because it's calculating
+          overWrite: false,
+        }
+      }
       // 2 edge case
       // if current is 0 and we cant add another 0;
       if (payload.digit === "0" && state.curOperand === "0") return state;
+      // if current not entered and we click the period it should does nothing
+      if (payload.digit === "." && !state.curOperand) return state;
       // fi current already has period we cant add another one
       if (payload.digit === "." && state.curOperand.includes(".")) return state;
       // spread out the state then update curOperand when click digit
@@ -51,6 +65,7 @@ const reducer = (state, { type, payload }) => {
         }
       }
 
+      // handle if we click multiple times of sign to update the operation
       if (state.curOperand == null) {
         return {
           ...state,
@@ -70,6 +85,42 @@ const reducer = (state, { type, payload }) => {
     case ACTION.CLEAR:
       return {}
 
+    // ------------ handle the equal sign of evaluation ---------------------
+    case ACTION.EVALUATE:
+      if (state.curOperand == null || state.prevOperand == null || state.operation == null) return state;
+      return {
+        ...state,
+        prevOperand: null,
+        curOperand: evaluate(state),
+        operation: null,
+        // adding the overWrite to true, to show that the number is computed and ready for next turn
+        // and back to add digits (first case)
+        overWrite: true,
+      }
+
+    // ------------ delete the digits if we click the wrong number --------------
+    case ACTION.DEL_DIGIT:
+      // if it's calculated we act delete like clear
+      if (state.overWrite) {
+        return {
+          ...state,
+          overWrite: false,
+          curOperand: null,
+        };
+      }
+
+      if (state.curOperand == null) return state;
+      if (state.curOperand.length === 1) {
+        return {
+          ...state,
+          curOperand: null,
+        }
+      }
+
+      return {
+        ...state,
+        curOperand: state.curOperand.slice(0, -1)
+      }
 
     // ------------ default state ------------
     default:
@@ -101,6 +152,17 @@ const evaluate = ({ curOperand, prevOperand, operation }) => {
   return computation.toString()
 }
 
+const INTEGER_FORMATE = new Intl.NumberFormat("en-us", {
+  maximumFractionDigits: 0,
+})
+
+const formatOperand = (operand) => {
+  if (!operand) return;
+  const [integer, decimal] = operand.split(".");
+  if (!decimal) return INTEGER_FORMATE.format(integer);
+  return `${INTEGER_FORMATE.format(integer)}.${decimal}`
+}
+
 function App() {
   // state as current/previous/operation
   const [{ curOperand, prevOperand, operation }, dispatch] = useReducer(reducer, {})
@@ -109,12 +171,12 @@ function App() {
     <div className="calculator-grid">
 
       <div className="output">
-        <div className="prev-operand">{prevOperand} {operation}</div>
-        <div className="cur-operand">{curOperand}</div>
+        <div className="prev-operand">{formatOperand(prevOperand)} {operation}</div>
+        <div className="cur-operand">{formatOperand(curOperand)}</div>
       </div>
 
       <button className="span-two" onClick={() => dispatch({ type: ACTION.CLEAR })}>AC</button>
-      <button>DEL</button>
+      <button onClick={() => dispatch({ type: ACTION.DEL_DIGIT })}>DEL</button>
       <OperationButton dispatch={dispatch} operation="÷" />
       <DigitButton dispatch={dispatch} digit="7" />
       <DigitButton dispatch={dispatch} digit="8" />
@@ -130,7 +192,7 @@ function App() {
       <OperationButton dispatch={dispatch} operation="-" />
       <DigitButton dispatch={dispatch} digit="." />
       <DigitButton dispatch={dispatch} digit="0" />
-      <button className="span-two">=</button>
+      <button className="span-two" onClick={() => dispatch({ type: ACTION.EVALUATE })}>=</button>
 
     </div >
   );
